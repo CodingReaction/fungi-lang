@@ -1,0 +1,47 @@
+
+fn :Create-todo :name :due-date => {:name, :due-date, :completed} =>
+fn :Add-todo :todo-list :item => :item => :todo-list =X
+fn :Rm-todo :todo-list :item => :item =/> :todo-list =X
+
+fn :Complete-todo :todo-list :index :completed-list =>
+  :todo-list[:index] => :item =/> :todo-list
+  {:name :item.name, :due-date :item.due-date, :completed true} => :completed-list =X
+
+1 => :PRINT    => :options
+2 => :ADD      => :options
+3 => :COMPLETE => :options
+4 => :REMOVE   => :options
+5 => :EXIT     => :options
+
+[] => :todo-list => :complete-list
+nil => :option
+
+"Welcome" => :Echo
+
+while :option !? :options:EXIT =>
+  "please chose an option" => :Echo
+  "1 - Print all TODOs"             => :Echo
+  "2 - Add new TODO"                => :Echo
+  "3 - Complete TODO"               => :Echo
+  "4 - Remove TODO"                 => :Echo
+  "5 - Exit"                        => :Echo
+
+  :Input => :option
+  :option ? :options:PRINT =>
+    "Current todos: " => :Echo
+    :todo-list        => :Echo
+  :option ? :options:ADD =>
+    "Please write the todo name" => :Echo 
+    :Input => :todo-name
+    "Please write the todo date" => :Echo 
+    :Input => :todo-date
+    :todo-name :todo-date false => :Create-todo => :Add-todo
+  :option ? :options:COMPLETE =>
+    "Please write the number of the todo to complete" => :Echo
+    :todo-list :completed-list => :Bind => :Complete-todo
+    :Input => :Parse-int => (:todo-list :completed-list => :Bind => :Complete-todo) => :Unbind
+  :option ? :options:REMOVE =>
+    "Please write the number of the todo to remove" => :Echo
+    :Input => :Parse-int => (:todo-list => :Bind => :Rm-todo) => :Unbind
+  :option ? :options:EXIT =>
+    "See you later bye!" => :Echo
